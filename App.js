@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
+import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications';
 
 export default function App() {
@@ -35,7 +36,7 @@ export default function App() {
     [token]
   )
 
-  registerForPushNotificationsAsync = async () => {
+  const registerForPushNotificationsAsync = async () => {
     if (Constants.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
@@ -47,7 +48,7 @@ export default function App() {
         alert('Failed to get push token for push notification!');
         return;
       }
-      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      const token = (await Notifications.getExpoPushTokenAsync({ experienceId: '@exiasr/radar-kitten-test' })).data;
       console.log(token);
       setToken(token)
     } else {
@@ -59,6 +60,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
+      <Button title="Register Notification" onPress={registerForPushNotificationsAsync} />
       <Button title="Test Notification" onPress={() => sendNotificationAsync("hi", "this is a test")} />
       <StatusBar style="auto" />
     </View>
